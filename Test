@@ -1,0 +1,46 @@
+import sys
+from model import MobilePhone
+from model import Smartphone
+
+def main():
+    try:
+        # Check if the program has a command-line argument (n) and it's a positive integer
+        if len(sys.argv) != 2 or not sys.argv[1].isdigit() or int(sys.argv[1]) <= 0:
+            raise ValueError("Usage: python test.py <n> (where n is a positive integer)")
+
+        n = int(sys.argv[1])
+
+        # Initialize an empty list to store mobile phones
+        phones = []
+
+        # Read mobile phone data from standard input
+        for _ in range(n):
+            line = input().strip()
+            parts = line.split(";")
+
+            if len(parts) < 3:
+                raise ValueError("Invalid input format")
+
+            manufacturer, model_type, edition = parts[:3]
+
+            if len(parts) == 4:
+                resolution = parts[3]
+                phone = Smartphone(manufacturer, model_type, int(edition), resolution)
+            else:
+                phone = MobilePhone(manufacturer, model_type, int(edition))
+
+            phones.append(phone)
+
+        # Sort the list of mobile phones
+        sorted_phones = MobilePhone.compare_phones(phones)
+
+        # Print the sorted list
+        for phone in sorted_phones:
+            print(phone)
+
+    except ValueError as e:
+        print(f"Error: {e}")
+        sys.exit(1)
+
+if __name__ == "__main__":
+    main()
