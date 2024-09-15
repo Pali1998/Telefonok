@@ -1,0 +1,99 @@
+class MobilePhone:
+    manufacturer : str
+    __model_type : str
+    __year : int
+
+    def __init__(self, manufacturer, model_type, year=2022):
+        self.manufacturer = manufacturer
+        self.__model_type = model_type
+        self.__year = year
+
+    @property
+    def model(self):
+        return self.__model_type
+
+    @model.setter
+    def model(self, model_type):
+        self.__model_type = model_type
+
+    @property
+    def year(self):
+        return self.__year
+
+    @year.setter
+    def year(self, year):
+        self.__year = year
+
+    def __repr__(self):
+        return f"{self.manufacturer}, {self.__model_type}, {self.__year}"
+
+    def __str__(self):
+        return f"{self.manufacturer} // {self.__model_type} ({self.__year})"
+
+    def __eq__(self, other):
+        return (
+            self.manufacturer == other.manufacturer
+            and self.__model_type == other.__model_type
+            and self.__year == other.__year
+        )
+
+    @staticmethod
+    def compare_phones(phones):
+        return sorted(
+            phones,
+            key=lambda phone: (phone.manufacturer, -phone.__year, phone.__model_type),
+        )
+
+    @staticmethod
+    def phones_released_before_year(phones, year):
+        return [phone for phone in phones if phone.__year < year]
+
+
+# Telefon példák
+phone1 = MobilePhone("Nokia", "3310", 2000)
+phone2 = MobilePhone("Apple", "iPhone 13")
+phone3 = MobilePhone("Samsung", "Galaxy S21", 2021)
+
+# Rendezés
+phones = [phone1, phone2, phone3]
+sorted_phones = MobilePhone.compare_phones(phones)
+print(sorted_phones)  # Sorted by manufacturer, year, and model
+
+# Filter phones released before a specific year
+phones_before_2021 = MobilePhone.phones_released_before_year(phones, 2021)
+print(phones_before_2021)  # Should print [phone1]
+
+
+class Smartphone(MobilePhone):
+    def __init__(self, manufacturer, model_type, year=2022, camera_resolution="16-megapixel"):
+        super().__init__(manufacturer, model_type, year)
+        self.__camera_resolution = camera_resolution
+
+    @property
+    def camera_resolution(self):
+        return self.__camera_resolution
+
+    @camera_resolution.setter
+    def camera_resolution(self, resolution):
+        self.__camera_resolution = resolution
+
+    def __repr__(self):
+        phone_data = super().__repr__()
+        return f"{phone_data}, {self.__camera_resolution}"
+
+    def __str__(self):
+        phone_data = super().__str__()
+        return f"{phone_data}: {self.__camera_resolution}"
+
+# Create a smartphone instance
+smartphone = Smartphone("Samsung", "Galaxy Note 10+", 2019, "16-megapixel")
+
+# Access properties
+print(smartphone.manufacturer)  # Samsung
+print(smartphone.model)         # Galaxy Note 10+
+print(smartphone.year)          # 2019
+print(smartphone.camera_resolution)  # 16-megapixel
+
+# String representations
+print(repr(smartphone))  # Samsung, Galaxy Note 10+, 2019, 16-megapixel
+print(str(smartphone))   # Samsung // Galaxy Note 10+ (2019): 16-megapixel
